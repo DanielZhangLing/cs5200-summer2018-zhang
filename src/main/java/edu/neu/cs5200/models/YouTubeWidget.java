@@ -21,11 +21,22 @@ public class YouTubeWidget extends Widget {
 		this.text = widget.getText();
 		this.order = widget.getOrder();
 		this.type = widget.getType();
+		this.pageId = widget.getPageId();
 		this.youTubeWidgetId = youTubeWidgetId;
 		this.url = url;
 		this.sharable = sharable;
 		this.expandable = expandable;
 	}
+	
+    public YouTubeWidget(String name,  String text, int order, int width, int height, String url){
+        this.name=name;
+        this.text=text;
+        this.order=order;
+        this.type="youtube";
+        this.width = width;
+        this.height = height;
+        this.url = url;
+    }
 
 	public int getYouTubeWidgetId() {
 		return youTubeWidgetId;

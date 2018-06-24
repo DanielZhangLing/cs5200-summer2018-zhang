@@ -1,5 +1,6 @@
 package edu.neu.cs5200.models;
 
+import java.sql.Date;
 import java.util.Collection;
 
 public class Developer extends Person {
@@ -21,6 +22,17 @@ public class Developer extends Person {
 		this.email = person.getEmail();
 		this.dob = person.getDob();
 		this.developerId = developerId;
+		this.developerKey = developerKey;
+	}
+	
+	public Developer(String firstName, String lastName, String username, String password, String email, Date dob, String developerKey) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.dob = dob;
 		this.developerKey = developerKey;
 	}
 

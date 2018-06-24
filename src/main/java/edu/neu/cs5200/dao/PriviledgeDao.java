@@ -16,10 +16,10 @@ public class PriviledgeDao extends BaseDao{
 		return instance;
 	}
 	
-	final String ASSIGN_WEBSITE_PRIVILEDGE = "INSERT INTO hw2_zhang_ling_summer_2018.WebsitePriviledge (priviledge, developer, website) VALUES (? ,? ,? );";
-	final String ASSIGN_PAGE_PRIVILEDGE = "INSERT INTO hw2_zhang_ling_summer_2018.PagePriviledge (priviledge, developer, page) VALUES (? ,? ,? );";
-	final String DELETE_WEBSITE_PRIVILEDGE = "DELETE FROM hw2_zhang_ling_summer_2018.WebsitePriviledge WHERE priviledge = ? AND developer = ? AND website = ?;";
-	final String DELETE_PAGE_PRIVILEDGE = "DELETE FROM hw2_zhang_ling_summer_2018.PagePriviledge WHERE priviledge = ? AND developer = ? AND page = ?;";
+	final String ASSIGN_WEBSITE_PRIVILEDGE = "INSERT INTO hw3_zhang_ling_summer_2018.WebsitePriviledge (priviledge, developer, website) VALUES (? ,? ,? );";
+	final String ASSIGN_PAGE_PRIVILEDGE = "INSERT INTO hw3_zhang_ling_summer_2018.PagePriviledge (priviledge, developer, page) VALUES (? ,? ,? );";
+	final String DELETE_WEBSITE_PRIVILEDGE = "DELETE FROM hw3_zhang_ling_summer_2018.WebsitePriviledge WHERE priviledge = ? AND developer = ? AND website = ?;";
+	final String DELETE_PAGE_PRIVILEDGE = "DELETE FROM hw3_zhang_ling_summer_2018.PagePriviledge WHERE priviledge = ? AND developer = ? AND page = ?;";
 
 	public void assignWebsitePriviledge(int developerId, int websiteId, int priviledgeId) {
 		try {

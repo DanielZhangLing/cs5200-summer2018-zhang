@@ -24,28 +24,24 @@ public class DeveloperDao extends BaseDao {
 		return instance;
 	}
 
-	final String CREATE_DEVELOPER = "INSERT INTO hw2_zhang_ling_summer_2018.Developer (developerKey, person) VALUES (?,?);";
-	final String FIND_ALL_DEVEVLOPERS = "SELECT * FROM hw2_zhang_ling_summer_2018.Developer;";
-	final String FIND_DEVELOPER_BY_ID = "SELECT * FROM hw2_zhang_ling_summer_2018.Developer WHERE id = ?;";
-	final String FIND_DEVELOPER_BY_PERSON_ID = "SELECT * FROM hw2_zhang_ling_summer_2018.Developer WHERE person = ?;";
-	final String UPDATE_DEVELOPER = "UPDATE hw2_zhang_ling_summer_2018.Developer SET developerKey = ? WHERE id = ?;";
-	final String DELETE_DEVELOPER = "DELETE FROM hw2_zhang_ling_summer_2018.Developer WHERE id = ?;";
+	final String CREATE_DEVELOPER = "INSERT INTO hw3_zhang_ling_summer_2018.Developer (developerKey, person) VALUES (?, ?);";
+	final String FIND_ALL_DEVEVLOPERS = "SELECT * FROM hw3_zhang_ling_summer_2018.Developer;";
+	final String FIND_DEVELOPER_BY_ID = "SELECT * FROM hw3_zhang_ling_summer_2018.Developer WHERE id = ?;";
+	final String FIND_DEVELOPER_BY_PERSON_ID = "SELECT * FROM hw3_zhang_ling_summer_2018.Developer WHERE person = ?;";
+	final String UPDATE_DEVELOPER = "UPDATE hw3_zhang_ling_summer_2018.Developer SET developerKey = ? WHERE id = ?;";
+	final String DELETE_DEVELOPER = "DELETE FROM hw3_zhang_ling_summer_2018.Developer WHERE id = ?;";
 
 	public int createDeveloper(Developer developer) {
-		int developerId = -1;
+		int result = 0;
 		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 			PersonDao personDao = PersonDao.getInstance();
-			int id = personDao.createPerson(developer);
+			int personId = personDao.createPerson(developer);
 			pstmt = conn.prepareStatement(CREATE_DEVELOPER);
 			pstmt.setString(1, developer.getDeveloperKey());
-			pstmt.setInt(2, id);
-			pstmt.executeUpdate();
-			ResultSet rs = pstmt.getGeneratedKeys();
-			if (rs.next())
-				developerId = rs.getInt("id");
-
+			pstmt.setInt(2, personId);
+			result = pstmt.executeUpdate();
 		} catch (SQLException se) {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
@@ -57,7 +53,7 @@ public class DeveloperDao extends BaseDao {
 			} catch (SQLException se2) { // ignore, can't help it
 			}
 		}
-		return developerId;
+		return result;
 	}
 
 	public Collection<Developer> findAllDevelopers() {

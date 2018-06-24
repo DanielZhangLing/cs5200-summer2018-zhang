@@ -19,10 +19,19 @@ public class HtmlWidget extends Widget {
 		this.text = widget.getText();
 		this.order = widget.getOrder();
 		this.type = widget.getType();
+		this.pageId = widget.getPageId();
 		this.htmlWidgetId = htmlWidgetId;
 		this.html = html;
 	}
 
+    public HtmlWidget( String name,  String text, int order, String html){
+        this.name=name;
+        this.text=text;
+        this.order=order;
+        this.type="html";
+        this.html = html;
+    }
+    
 	public int getHtmlWidgetId() {
 		return htmlWidgetId;
 	}

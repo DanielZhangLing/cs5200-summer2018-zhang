@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import edu.neu.cs5200.models.Person;
 
@@ -19,19 +20,19 @@ public class PersonDao extends BaseDao {
 		return instance;
 	}
 
-	final String CREATE_PERSON = "INSERT INTO hw2_zhang_ling_summer_2018.Person (firstName, lastName, username, password, email, dob) VALUES(?, ?, ?, ?, ?, ?);";
-	final String FIND_PERSON_BY_ID = "SELECT * FROM hw2_zhang_ling_summer_2018.Person WHERE id = ?;";
-	final String FIND_PERSON_BY_USERNAME = "SELECT * FROM hw2_zhang_ling_summer_2018.Person WHERE username = ?;";
-	final String FIND_PERSON_BY_CREDENTIALS = "SELECT * FROM hw2_zhang_ling_summer_2018.Person WHERE username = ? AND password = ?;";
-	final String UPDATE_PERSON = "UPDATE hw2_zhang_ling_summer_2018.Person SET firstName = ?, lastName = ?, username = ?, password = ?, email = ?, dob = ? WHERE id = ?;";
-	final String DELETE_PERSON = "DELETE FROM hw2_zhang_ling_summer_2018.Person WHERE id = ?;";
+	final String CREATE_PERSON = "INSERT INTO hw3_zhang_ling_summer_2018.Person (firstName, lastName, username, password, email, dob) VALUES(?, ?, ?, ?, ?, ?);";
+	final String FIND_PERSON_BY_ID = "SELECT * FROM hw3_zhang_ling_summer_2018.Person WHERE id = ?;";
+	final String FIND_PERSON_BY_USERNAME = "SELECT * FROM hw3_zhang_ling_summer_2018.Person WHERE username = ?;";
+	final String FIND_PERSON_BY_CREDENTIALS = "SELECT * FROM hw3_zhang_ling_summer_2018.Person WHERE username = ? AND password = ?;";
+	final String UPDATE_PERSON = "UPDATE hw3_zhang_ling_summer_2018.Person SET firstName = ?, lastName = ?, username = ?, password = ?, email = ?, dob = ? WHERE id = ?;";
+	final String DELETE_PERSON = "DELETE FROM hw3_zhang_ling_summer_2018.Person WHERE id = ?;";
 
 	public int createPerson(Person person) {
 		int personId = -1;
 		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			pstmt = conn.prepareStatement(CREATE_PERSON);
+			pstmt = conn.prepareStatement(CREATE_PERSON, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, person.getFirstName());
 			pstmt.setString(2, person.getLastName());
 			pstmt.setString(3, person.getUsername());
@@ -41,7 +42,7 @@ public class PersonDao extends BaseDao {
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
 			if (rs.next())
-				personId = rs.getInt("id");
+				personId = rs.getInt(1);
 		} catch (SQLException se) {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {

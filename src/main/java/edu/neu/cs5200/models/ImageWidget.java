@@ -19,7 +19,19 @@ public class ImageWidget extends Widget {
 		this.text = widget.getText();
 		this.order = widget.getOrder();
 		this.type = widget.getType();
+		this.pageId = widget.getPageId();
 		this.imageWidgetId = imageWidgetId;
+		this.src = src;
+	}
+	
+	public ImageWidget(String name, int width, int height, String text, int order, String src) {
+		super();
+		this.name = name;
+		this.width = width;
+		this.height = height;
+		this.text = text;
+		this.order = order;
+		this.type = "image";
 		this.src = src;
 	}
 

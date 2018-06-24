@@ -19,8 +19,18 @@ public class HeadingWidget extends Widget {
 		this.text = widget.getText();
 		this.order = widget.getOrder();
 		this.type = widget.getType();
+		this.pageId = widget.getPageId();
 		this.headingWidgetId = headingWidgetId;
 		this.size = size;
+	}
+
+	public HeadingWidget(String name, String text, int order, int size) {
+		super();
+		this.name = name;
+		this.text = text;
+		this.order = order;
+		this.size = size;
+		this.type = "heading";
 	}
 
 	public int getHeadingWidgetId() {

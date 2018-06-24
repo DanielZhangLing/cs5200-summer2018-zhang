@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,19 +24,20 @@ public class PageDao extends BaseDao {
 		return instance;
 	}
 
-	final String CREATE_PAGE_FOR_WEBSITE = "INSERT INTO hw2_zhang_ling_summer_2018.Page (title, description, views, website) VALUES (?, ?, ?, ?);";
-	final String FIND_ALL_PAGES = "SELECT * FROM hw2_zhang_ling_summer_2018.Page;";
-	final String FIND_PAGE_BY_ID = "SELECT * FROM hw2_zhang_ling_summer_2018.Page WHERE id = ?;";
-	final String FIND_PAGE_FOR_WEBSITE = "SELECT * FROM hw2_zhang_ling_summer_2018.Page WHERE website = ?;";
-	final String UPDATE_PAGE = "UPDATE hw2_zhang_ling_summer_2018.Page SET title =?, description =?, views =? WHERE id =?;";
-	final String DELETE_PAGE = "DELETE FROM hw2_zhang_ling_summer_2018.Page WHERE id = ?;";
+	final String CREATE_PAGE_FOR_WEBSITE = "INSERT INTO hw3_zhang_ling_summer_2018.Page (title, description, views, website) VALUES (?, ?, ?, ?);";
+	final String FIND_ALL_PAGES = "SELECT * FROM hw3_zhang_ling_summer_2018.Page;";
+	final String FIND_PAGE_BY_ID = "SELECT * FROM hw3_zhang_ling_summer_2018.Page WHERE id = ?;";
+	final String FIND_PAGE_BY_TITLE = "SELECT * FROM hw3_zhang_ling_summer_2018.Page WHERE title = ?;";
+	final String FIND_PAGE_FOR_WEBSITE = "SELECT * FROM hw3_zhang_ling_summer_2018.Page WHERE website = ?;";
+	final String UPDATE_PAGE = "UPDATE hw3_zhang_ling_summer_2018.Page SET title =?, description =?, views =? WHERE id =?;";
+	final String DELETE_PAGE = "DELETE FROM hw3_zhang_ling_summer_2018.Page WHERE id = ?;";
 
 	public int createPageForWebsite(int websiteId, Page page) {
 		int pageId = -1;
 		try {
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			pstmt = conn.prepareStatement(CREATE_PAGE_FOR_WEBSITE);
+			pstmt = conn.prepareStatement(CREATE_PAGE_FOR_WEBSITE, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, page.getTitle());
 			pstmt.setString(2, page.getDescription());
 			pstmt.setInt(3, page.getViews());
@@ -43,7 +45,7 @@ public class PageDao extends BaseDao {
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
 			if (rs.next())
-				pageId = rs.getInt("id");
+				pageId = rs.getInt(1);
 		} catch (SQLException se) {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
@@ -70,11 +72,11 @@ public class PageDao extends BaseDao {
 				int pageId = rs.getInt("id");
 				String title = rs.getString("title");
 				String description = rs.getString("description");
-				int visits = rs.getInt("visits");
+				int views = rs.getInt("views");
 				Date created = rs.getDate("created");
 				Date updated = rs.getDate("updated");
 				int websiteId = rs.getInt("website");
-				Page page = new Page(pageId, title, description, created, updated, visits, websiteId);
+				Page page = new Page(pageId, title, description, created, updated, views, websiteId);
 				WidgetDao widgetDao = WidgetDao.getInstance();
 				Collection<Widget> widgets = widgetDao.findWidgetsForPage(pageId);
 				page.setWidgets(widgets);
@@ -107,11 +109,11 @@ public class PageDao extends BaseDao {
 			if (rs.next()) {
 				String title = rs.getString("title");
 				String description = rs.getString("description");
-				int visits = rs.getInt("visits");
+				int views = rs.getInt("views");
 				Date created = rs.getDate("created");
 				Date updated = rs.getDate("updated");
 				int websiteId = rs.getInt("website");
-				page = new Page(pageId, title, description, created, updated, visits, websiteId);
+				page = new Page(pageId, title, description, created, updated, views, websiteId);
 				WidgetDao widgetDao = WidgetDao.getInstance();
 				Collection<Widget> widgets = widgetDao.findWidgetsForPage(pageId);
 				page.setWidgets(widgets);
@@ -131,6 +133,43 @@ public class PageDao extends BaseDao {
 		return page;
 	}
 
+	public Page findPageByTitle(String title) {
+
+		Page page = null;
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement(FIND_PAGE_BY_TITLE);
+			pstmt.setString(1, title);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				int pageId = rs.getInt("id");
+				String description = rs.getString("description");
+				int views = rs.getInt("views");
+				Date created = rs.getDate("created");
+				Date updated = rs.getDate("updated");
+				int websiteId = rs.getInt("website");
+				page = new Page(pageId, title, description, created, updated, views, websiteId);
+				WidgetDao widgetDao = WidgetDao.getInstance();
+				Collection<Widget> widgets = widgetDao.findWidgetsForPage(pageId);
+				page.setWidgets(widgets);
+			}
+		} catch (SQLException se) {
+			se.printStackTrace(); // handle errors for JDBC
+		} catch (Exception e) {
+			e.printStackTrace(); // handle Class.forName
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (SQLException se2) { // ignore, can't help it
+			}
+
+		}
+		return page;
+	}
+
+	
 	public Collection<Page> findPagesForWebsite(int websiteId) {
 
 		List<Page> pages = new ArrayList<Page>();
@@ -144,10 +183,10 @@ public class PageDao extends BaseDao {
 				int pageId = rs.getInt("id");
 				String title = rs.getString("title");
 				String description = rs.getString("description");
-				int visits = rs.getInt("visits");
+				int views = rs.getInt("views");
 				Date created = rs.getDate("created");
 				Date updated = rs.getDate("updated");
-				Page page = new Page(pageId, title, description, created, updated, visits, websiteId);
+				Page page = new Page(pageId, title, description, created, updated, views, websiteId);
 				WidgetDao widgetDao = WidgetDao.getInstance();
 				Collection<Widget> widgets = widgetDao.findWidgetsForPage(pageId);
 				page.setWidgets(widgets);
@@ -202,10 +241,6 @@ public class PageDao extends BaseDao {
 			pstmt = conn.prepareStatement(DELETE_PAGE);
 			pstmt.setInt(1, pageId);
 			result = pstmt.executeUpdate();
-			if (result > 0) {
-			WidgetDao widgetDao = WidgetDao.getInstance();
-				widgetDao.deleteWidgetsForPage(pageId);
-			}
 		} catch (SQLException se) {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
@@ -220,17 +255,17 @@ public class PageDao extends BaseDao {
 		return result;
 	}
 	
-	public int deletePagesForWebsite(int websiteId) {
-		int result = 0;
-		try {
-			Collection<Page> pages = findPagesForWebsite(websiteId);
-			for(Page page : pages) {
-				result += deletePage(page.getId());
-			}
-		} catch (Exception e) {
-			e.printStackTrace(); // handle Class.forName
-		}
-		return result;
-	}
+//	public int deletePagesForWebsite(int websiteId) {
+//		int result = 0;
+//		try {
+//			Collection<Page> pages = findPagesForWebsite(websiteId);
+//			for(Page page : pages) {
+//				result += deletePage(page.getId());
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace(); // handle Class.forName
+//		}
+//		return result;
+//	}
 
 }
