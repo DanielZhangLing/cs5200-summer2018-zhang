@@ -1,3 +1,9 @@
+## HW3
+
+- All the models are under edu.neu.cs5200.models
+- All the daos are under edu.neu.cs5200.dao
+- All sql scripts are contained in initailization.sql
+- run operations in /cs5200-summer2018-zhang/src/main/java/edu/neu/cs5200/hw_jdbc_last_first.java
 
 ## Integrating Spring Boot with MySQL
 
