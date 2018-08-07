@@ -1,7 +1,6 @@
 package edu.neu.cs5200.dao;
 
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,8 +37,7 @@ public class WebsiteDao extends BaseDao {
 	public int createWebsiteForDeveloper(int developerId, Website website) {
 		int websiteId = -1;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(CREATE_WEBSITE_FOR_DEVELOPER, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, website.getName());
 			pstmt.setString(2, website.getDescription());
@@ -60,12 +58,6 @@ public class WebsiteDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return websiteId;
 	}
@@ -74,8 +66,7 @@ public class WebsiteDao extends BaseDao {
 
 		List<Website> websites = new ArrayList<Website>();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_ALL_WEBSITES);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -96,13 +87,6 @@ public class WebsiteDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return websites;
 	}
@@ -111,8 +95,7 @@ public class WebsiteDao extends BaseDao {
 
 		List<Website> websites = new ArrayList<Website>();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_WEBSITES_FOR_DEVELOPER);
 			pstmt.setInt(1, developerId);
 			ResultSet rs = pstmt.executeQuery();
@@ -133,13 +116,6 @@ public class WebsiteDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return websites;
 	}
@@ -147,8 +123,7 @@ public class WebsiteDao extends BaseDao {
 	public Website findWebsiteById(int websiteId) {
 		Website website = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_WEBSITE_BY_ID);
 			pstmt.setInt(1, websiteId);
 			ResultSet rs = pstmt.executeQuery();
@@ -168,13 +143,6 @@ public class WebsiteDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return website;
 	}
@@ -182,8 +150,7 @@ public class WebsiteDao extends BaseDao {
 	public Website findWebsiteByName(String name) {
 		Website website = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_WEBSITE_BY_NAME);
 			pstmt.setString(1, name);
 			ResultSet rs = pstmt.executeQuery();
@@ -203,13 +170,6 @@ public class WebsiteDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return website;
 	}
@@ -217,8 +177,7 @@ public class WebsiteDao extends BaseDao {
 	public int updateWebsite(int websiteId, Website website) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(UPDATE_WEBSITE);
 			pstmt.setString(1, website.getName());
 			pstmt.setString(2, website.getDescription());
@@ -229,12 +188,6 @@ public class WebsiteDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}
@@ -242,8 +195,7 @@ public class WebsiteDao extends BaseDao {
 	public int deleteWebsite(int websiteId) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(DELETE_WEBSITE);
 			pstmt.setInt(1, websiteId);
 			result = pstmt.executeUpdate();
@@ -251,12 +203,6 @@ public class WebsiteDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}

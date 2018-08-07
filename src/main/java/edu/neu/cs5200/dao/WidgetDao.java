@@ -1,6 +1,5 @@
 package edu.neu.cs5200.dao;
 
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -53,8 +52,7 @@ public class WidgetDao extends BaseDao {
 	public int createWidgetForPage(int pageId, Widget widget) {
 		int widgetId = -1;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(CREATE_WIDGET_FOR_PAGE, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, widget.getName());
 			pstmt.setInt(2, widget.getWidth());
@@ -76,12 +74,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return widgetId;
 	}
@@ -89,8 +81,7 @@ public class WidgetDao extends BaseDao {
 	public int createTypeWidget(int widgetId, Widget widget) {
 		int typeWidgetId = -1;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			switch (widget.getType().toUpperCase()) {
 			case "HEADING":
 				pstmt = conn.prepareStatement(CREATE_HEADING, Statement.RETURN_GENERATED_KEYS);
@@ -124,12 +115,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return typeWidgetId;
 	}
@@ -138,8 +123,7 @@ public class WidgetDao extends BaseDao {
 
 		List<Widget> widgets = new ArrayList<Widget>();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_ALL_WIDGETS);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -161,13 +145,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return widgets;
 	}
@@ -175,8 +152,7 @@ public class WidgetDao extends BaseDao {
 	public Widget findTypeWidgetByWidget(int widgetId, Widget widget) {
 		String type = widget.getType();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			switch (type.toUpperCase()) {
 			case "HEADING":
 				pstmt = conn.prepareStatement(FIND_HEADING_BY_WIDGET_ID);
@@ -223,13 +199,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return widget;
 	}
@@ -238,8 +207,7 @@ public class WidgetDao extends BaseDao {
 
 		Widget widget = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_WIDGET_BY_ID);
 			pstmt.setInt(1, widgetId);
 			ResultSet rs = pstmt.executeQuery();
@@ -260,13 +228,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return widget;
 	}
@@ -275,8 +236,7 @@ public class WidgetDao extends BaseDao {
 
 		Widget widget = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_WIDGET_BY_NAME);
 			pstmt.setString(1, name);
 			ResultSet rs = pstmt.executeQuery();
@@ -297,13 +257,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return widget;
 	}
@@ -312,8 +265,7 @@ public class WidgetDao extends BaseDao {
 
 		List<Widget> widgets = new ArrayList<Widget>();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_WIDGET_FOR_PAGE);
 			pstmt.setInt(1, pageId);
 			ResultSet rs = pstmt.executeQuery();
@@ -335,13 +287,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return widgets;
 	}
@@ -351,8 +296,7 @@ public class WidgetDao extends BaseDao {
 		try {
 			if (updateTypeWidget)
 				updateTypeWidget(widgetId, widget);
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(UPDATE_WIDGET);
 			pstmt.setString(1, widget.getName());
 			pstmt.setInt(2, widget.getWidth());
@@ -369,12 +313,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}
@@ -382,8 +320,7 @@ public class WidgetDao extends BaseDao {
 	public int updateTypeWidget(int widgetId, Widget widget) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			switch (widget.getType().toUpperCase()) {
 			case "HEADING":
 				pstmt = conn.prepareStatement(UPDATE_HEADING);
@@ -417,12 +354,6 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}
@@ -430,8 +361,7 @@ public class WidgetDao extends BaseDao {
 	public int deleteWidget(int widgetId) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(DELETE_WIDGET);
 			pstmt.setInt(1, widgetId);
 			result = pstmt.executeUpdate();
@@ -439,65 +369,7 @@ public class WidgetDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}
-
-	// public int deleteTypeWidget(int widgetId) {
-	// int result = 0;
-	// Widget widget = findWidgetById(widgetId);
-	// try {
-	// Class.forName(JDBC_DRIVER);
-	// conn = DriverManager.getConnection(DB_URL, USER, PASS);
-	// switch (widget.getType().toUpperCase()) {
-	// case "HEADING":
-	// pstmt = conn.prepareStatement(DELETE_HEADING);
-	// break;
-	// case "HTML":
-	// pstmt = conn.prepareStatement(DELETE_HTML);
-	// break;
-	// case "IMAGE":
-	// pstmt = conn.prepareStatement(DELETE_IMAGE);
-	// break;
-	// case "YOUTUBE":
-	// pstmt = conn.prepareStatement(DELETE_YOUTUBE);
-	// break;
-	// default:
-	// break;
-	// }
-	// pstmt.setInt(1, widgetId);
-	// result = pstmt.executeUpdate();
-	//
-	// } catch (SQLException se) {
-	// se.printStackTrace(); // handle errors for JDBC
-	// } catch (Exception e) {
-	// e.printStackTrace(); // handle Class.forName
-	// } finally {
-	// try {
-	// if (conn != null)
-	// conn.close();
-	// } catch (SQLException se2) { // ignore, can't help it
-	// }
-	// }
-	// return result;
-	// }
-
-	// public int deleteWidgetsForPage(int pageId) {
-	// int result = 0;
-	// try {
-	// Collection<Widget> widgets = findWidgetsForPage(pageId);
-	// for (Widget widget : widgets) {
-	// result += deleteWidget(widget.getId());
-	// }
-	// } catch (Exception e) {
-	// e.printStackTrace(); // handle Class.forName
-	// }
-	// return result;
-	// }
 }

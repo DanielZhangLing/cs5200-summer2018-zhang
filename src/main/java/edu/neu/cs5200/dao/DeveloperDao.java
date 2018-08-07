@@ -1,6 +1,5 @@
 package edu.neu.cs5200.dao;
 
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,8 +33,7 @@ public class DeveloperDao extends BaseDao {
 	public int createDeveloper(Developer developer) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			PersonDao personDao = PersonDao.getInstance();
 			int personId = personDao.createPerson(developer);
 			pstmt = conn.prepareStatement(CREATE_DEVELOPER);
@@ -46,12 +44,6 @@ public class DeveloperDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}
@@ -60,8 +52,7 @@ public class DeveloperDao extends BaseDao {
 
 		List<Developer> developers = new ArrayList<Developer>();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_ALL_DEVEVLOPERS);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -80,13 +71,6 @@ public class DeveloperDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return developers;
 	}
@@ -94,8 +78,7 @@ public class DeveloperDao extends BaseDao {
 	public Developer findDeveloperById(int id) {
 		Developer developer = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_DEVELOPER_BY_ID);
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
@@ -110,13 +93,6 @@ public class DeveloperDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return developer;
 	}
@@ -124,8 +100,7 @@ public class DeveloperDao extends BaseDao {
 	public Developer findDeveloperByPersonId(int personId) {
 		Developer developer = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_DEVELOPER_BY_PERSON_ID);
 			pstmt.setInt(1, personId);
 			ResultSet rs = pstmt.executeQuery();
@@ -140,13 +115,6 @@ public class DeveloperDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return developer;
 	}
@@ -154,23 +122,13 @@ public class DeveloperDao extends BaseDao {
 	public Developer findDeveloperByUsername(String username) {
 		Developer developer = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			PersonDao personDao = PersonDao.getInstance();
 			Person person = personDao.findPersonByUsername(username);
 			if (person != null)
 				developer = findDeveloperByPersonId(person.getId());
-		} catch (SQLException se) {
-			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return developer;
 	}
@@ -178,23 +136,13 @@ public class DeveloperDao extends BaseDao {
 	public Developer findDeveloperByCredentials(String username, String password) {
 		Developer developer = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			PersonDao personDao = PersonDao.getInstance();
 			Person person = personDao.findPersonByCredentials(username, password);
 			if (person != null)
 				developer = findDeveloperByPersonId(person.getId());
-		} catch (SQLException se) {
-			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
 		}
 		return developer;
 	}
@@ -202,8 +150,7 @@ public class DeveloperDao extends BaseDao {
 	public int updateDeveloper(int developerId, Developer developer) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			PersonDao personDao = PersonDao.getInstance();
 			personDao.updatePerson(developer.getId(), developer);
 			pstmt = conn.prepareStatement(UPDATE_DEVELOPER);
@@ -214,12 +161,6 @@ public class DeveloperDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}
@@ -227,8 +168,7 @@ public class DeveloperDao extends BaseDao {
 	public int deleteDeveloper(int developerId) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			Developer developer = findDeveloperById(developerId);
 			PersonDao personDao = PersonDao.getInstance();
 			personDao.deletePerson(developer.getId());
@@ -239,14 +179,7 @@ public class DeveloperDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
 		}
 		return result;
 	}
-
 }

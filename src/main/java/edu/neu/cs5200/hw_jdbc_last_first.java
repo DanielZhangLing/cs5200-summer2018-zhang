@@ -20,6 +20,12 @@ import edu.neu.cs5200.models.Page;
 
 public class hw_jdbc_last_first {
 
+	private DeveloperDao developerDao = DeveloperDao.getInstance();
+	private WebsiteDao websiteDao = WebsiteDao.getInstance();
+	private RoleDao roleDao = RoleDao.getInstance();
+	private PageDao pageDao = PageDao.getInstance();
+	private WidgetDao widgetDao = WidgetDao.getInstance();
+
 	public static void main(String[] args) {
 		hw_jdbc_last_first jdbc = new hw_jdbc_last_first();
 		jdbc.createDeveloper();
@@ -28,10 +34,10 @@ public class hw_jdbc_last_first {
 		jdbc.createWidget();
 		jdbc.implementUpdate();
 		jdbc.implementDelete();
+		jdbc.disconnected();
 	}
 
 	public void createDeveloper() {
-		DeveloperDao developerDao = DeveloperDao.getInstance();
 		Developer alice = new Developer("Alice", "Wonder", "alice", "alice", "alice@wonder.com", null, "4321rewq");
 		Developer bob = new Developer("Bob", "Marley", "bob", "bob", "bob@marley.com", null, "5432trew");
 		Developer charlie = new Developer("Charles", "Garcia", "charlie", "charlie", "chuch@garcia.com", null,
@@ -46,9 +52,6 @@ public class hw_jdbc_last_first {
 	}
 
 	public void createWebsite() {
-		DeveloperDao developerDao = DeveloperDao.getInstance();
-		WebsiteDao websiteDao = WebsiteDao.getInstance();
-		RoleDao roleDao = RoleDao.getInstance();
 		Website facebook = new Website(0, "Facebook", "an online social media and social networking service", null,
 				null, 1234234, 0);
 		int facebookId = websiteDao
@@ -101,10 +104,6 @@ public class hw_jdbc_last_first {
 	}
 
 	public void createPage() {
-		DeveloperDao developerDao = DeveloperDao.getInstance();
-		WebsiteDao websiteDao = WebsiteDao.getInstance();
-		PageDao pageDao = PageDao.getInstance();
-		RoleDao roleDao = RoleDao.getInstance();
 		Page home = new Page(0, "Home", "Landing page", null, null, 123434, 0);
 		int homeId = pageDao.createPageForWebsite(websiteDao.findWebsiteByName("CNET").getId(), home);
 		roleDao.assignPageRole(developerDao.findDeveloperByUsername("alice").getDeveloperId(), homeId,
@@ -150,8 +149,6 @@ public class hw_jdbc_last_first {
 	}
 
 	public void createWidget() {
-		WidgetDao widgetDao = WidgetDao.getInstance();
-		PageDao pageDao = PageDao.getInstance();
 		HeadingWidget head123 = new HeadingWidget("head123", "Welcome", 0, 0);
 		widgetDao.createWidgetForPage(pageDao.findPageByTitle("Home").getId(), head123);
 		HtmlWidget post234 = new HtmlWidget("post234", "<p>Lorem</p>", 0, null);
@@ -173,7 +170,6 @@ public class hw_jdbc_last_first {
 	}
 
 	private void implementUpdateOne() {
-		WidgetDao widgetDao = WidgetDao.getInstance();
 		Collection<Widget> widgets = widgetDao.findAllWidgets();
 		Widget head345 = widgetDao.findWidgetByName("head345");
 		int page = head345.getPageId();
@@ -192,8 +188,6 @@ public class hw_jdbc_last_first {
 	}
 
 	private void implementUpdateTwo() {
-		WebsiteDao websiteDao = WebsiteDao.getInstance();
-		PageDao pageDao = PageDao.getInstance();
 		Website cnet = websiteDao.findWebsiteByName("CNET");
 		Collection<Page> pages = pageDao.findPagesForWebsite(cnet.getId());
 		for (Page page : pages) {
@@ -203,9 +197,6 @@ public class hw_jdbc_last_first {
 	}
 
 	private void implementUpdateThree() {
-		PageDao pageDao = PageDao.getInstance();
-		DeveloperDao developerDao = DeveloperDao.getInstance();
-		RoleDao roleDao = RoleDao.getInstance();
 		Page cnetHome = pageDao.findPageByTitle("CNET - Home");
 		int pageId = cnetHome.getId();
 		Developer bob = developerDao.findDeveloperByUsername("bob");
@@ -225,8 +216,6 @@ public class hw_jdbc_last_first {
 	}
 
 	public void implementDeleteOne() {
-		WidgetDao widgetDao = WidgetDao.getInstance();
-		PageDao pageDao = PageDao.getInstance();
 		Page contact = pageDao.findPageByTitle("Contact");
 		Collection<Widget> widgets = widgetDao.findWidgetsForPage(contact.getId());
 		int max = Integer.MIN_VALUE;
@@ -241,8 +230,6 @@ public class hw_jdbc_last_first {
 	}
 
 	public void implementDeleteTwo() {
-		WebsiteDao websiteDao = WebsiteDao.getInstance();
-		PageDao pageDao = PageDao.getInstance();
 		Website wiki = websiteDao.findWebsiteByName("Wikipedia");
 		Collection<Page> pages = pageDao.findPagesForWebsite(wiki.getId());
 		Date latest = new Date(Long.MIN_VALUE);
@@ -258,8 +245,15 @@ public class hw_jdbc_last_first {
 	}
 
 	public void implementDeleteThree() {
-		WebsiteDao websiteDao = WebsiteDao.getInstance();
 		Website cnet = websiteDao.findWebsiteByName("CNET");
 		websiteDao.deleteWebsite(cnet.getId());
+	}
+	
+	public void disconnected() {
+		developerDao.closeConnection();
+		websiteDao.closeConnection();
+		roleDao.closeConnection();
+		pageDao.closeConnection();
+		widgetDao.closeConnection();
 	}
 }

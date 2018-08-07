@@ -1,7 +1,6 @@
 package edu.neu.cs5200.dao;
 
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,8 +34,7 @@ public class PageDao extends BaseDao {
 	public int createPageForWebsite(int websiteId, Page page) {
 		int pageId = -1;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(CREATE_PAGE_FOR_WEBSITE, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, page.getTitle());
 			pstmt.setString(2, page.getDescription());
@@ -50,13 +48,7 @@ public class PageDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-		}
+		} 
 		return pageId;
 	}
 
@@ -64,8 +56,7 @@ public class PageDao extends BaseDao {
 
 		List<Page> pages = new ArrayList<Page>();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_ALL_PAGES);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -86,14 +77,7 @@ public class PageDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
-		}
+		} 
 		return pages;
 	}
 
@@ -101,8 +85,7 @@ public class PageDao extends BaseDao {
 
 		Page page = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_PAGE_BY_ID);
 			pstmt.setInt(1, pageId);
 			ResultSet rs = pstmt.executeQuery();
@@ -122,14 +105,7 @@ public class PageDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
-		}
+		} 
 		return page;
 	}
 
@@ -137,8 +113,7 @@ public class PageDao extends BaseDao {
 
 		Page page = null;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_PAGE_BY_TITLE);
 			pstmt.setString(1, title);
 			ResultSet rs = pstmt.executeQuery();
@@ -158,14 +133,7 @@ public class PageDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
-		}
+		} 
 		return page;
 	}
 
@@ -174,8 +142,7 @@ public class PageDao extends BaseDao {
 
 		List<Page> pages = new ArrayList<Page>();
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(FIND_PAGE_FOR_WEBSITE);
 			pstmt.setInt(1, websiteId);
 			ResultSet rs = pstmt.executeQuery();
@@ -196,22 +163,14 @@ public class PageDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-
-		}
+		} 
 		return pages;
 	}
 
 	public int updatePage(int pageId, Page page) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(UPDATE_PAGE);
 			pstmt.setString(1, page.getTitle());
 			pstmt.setString(2, page.getDescription());
@@ -223,21 +182,14 @@ public class PageDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-		}
+		} 
 		return result;
 	}
 
 	public int deletePage(int pageId) {
 		int result = 0;
 		try {
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			connect();
 			pstmt = conn.prepareStatement(DELETE_PAGE);
 			pstmt.setInt(1, pageId);
 			result = pstmt.executeUpdate();
@@ -245,27 +197,8 @@ public class PageDao extends BaseDao {
 			se.printStackTrace(); // handle errors for JDBC
 		} catch (Exception e) {
 			e.printStackTrace(); // handle Class.forName
-		} finally {
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se2) { // ignore, can't help it
-			}
-		}
+		} 
 		return result;
 	}
-	
-//	public int deletePagesForWebsite(int websiteId) {
-//		int result = 0;
-//		try {
-//			Collection<Page> pages = findPagesForWebsite(websiteId);
-//			for(Page page : pages) {
-//				result += deletePage(page.getId());
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace(); // handle Class.forName
-//		}
-//		return result;
-//	}
 
 }
